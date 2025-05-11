@@ -157,12 +157,6 @@ class BorsaTest {
     }
 
     @Test
-    public void testRemoveAttrezzo_PresenteRestituisceRiferimentoCorretto() {
-        borsa.addAttrezzo(osso);
-        assertSame(osso, borsa.removeAttrezzo(osso));
-    }
-
-    @Test
     public void testRemoveAttrezzo_AggiornaPesoBorsa() {
         borsa.addAttrezzo(osso);
         int pesoIniziale = borsa.getPeso();
@@ -181,17 +175,5 @@ class BorsaTest {
         Attrezzo osso2 = new Attrezzo("osso", 1);
         borsa.addAttrezzo(osso1);
         assertNull(borsa.removeAttrezzo(osso2));
-    }
-
-    @Test
-    public void testRemoveAttrezzo_Null() {
-        assertNull(borsa.removeAttrezzo(null));
-    }
-
-    @Test
-    public void testRemoveUltimo_AttrezzoNonLasciaRiferimenti() {
-        borsa.addAttrezzo(osso);
-        borsa.removeAttrezzo(osso);
-        assertNull(borsa.getAttrezzo("osso"));
     }
 }

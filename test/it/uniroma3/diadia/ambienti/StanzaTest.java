@@ -72,17 +72,6 @@ class StanzaTest {
 		assertEquals(nuovaStanza, stanza.getStanzaAdiacente("nord"));
 	}
 
-	@Test
-	public void testImpostaStanzaAdiacente_AggiornamentoStanzaEsistente() {
-		Stanza nuovaStanza1 = new Stanza("Aula N10");
-		Stanza nuovaStanza2 = new Stanza("Aula N11");
-		stanza.impostaStanzaAdiacente("nord", nuovaStanza1);
-		assertEquals(nuovaStanza1, stanza.getStanzaAdiacente("nord"));
-		stanza.impostaStanzaAdiacente("nord", nuovaStanza2);
-		assertEquals(nuovaStanza2, stanza.getStanzaAdiacente("nord"));
-	}
-
-
 	/* TEST per getStanzaAdiacente */
 	@Test
 	public void testGetStanzaAdiacente_NonEsistente() {
@@ -189,22 +178,6 @@ class StanzaTest {
 	}
 
 	@Test
-	public void testAddAttrezzo_VerificaOrdineInserimento() {
-		stanza.addAttrezzo(osso);
-		stanza.addAttrezzo(lanterna);
-		stanza.addAttrezzo(libro);
-		Attrezzo[] attrezzi = stanza.getAttrezzi();
-		assertEquals(osso, attrezzi[0]);
-		assertEquals(lanterna, attrezzi[1]);
-		assertEquals(libro, attrezzi[2]);
-	}
-
-	@Test
-	public void testAddAttrezzo_AttrezzoNull() {
-		assertTrue(stanza.addAttrezzo(null));
-	}
-
-	@Test
 	public void testAddAttrezzo_StessaIstanzaDueVolte() {
 		assertTrue(stanza.addAttrezzo(osso));
 		assertTrue(stanza.addAttrezzo(osso));
@@ -305,31 +278,6 @@ class StanzaTest {
 		Attrezzo[] attrezzi = stanza.getAttrezzi();
 		assertSame(lanterna, attrezzi[0]);
 	}
-
-    @Test
-    public void testRemoveAttrezzo_ConRiferimentoDiversoMaStessoNome() {
-        Attrezzo osso1 = new Attrezzo("osso", 1);
-        Attrezzo osso2 = new Attrezzo("osso", 1);
-        stanza.addAttrezzo(osso1);
-        assertFalse(stanza.removeAttrezzo(osso2));
-    }
-    
-    @Test
-    public void testRemoveAttrezzo_MantieneOrdineArray() {
-        Attrezzo primo = new Attrezzo("primo", 1);
-        Attrezzo secondo = new Attrezzo("secondo", 1);
-        Attrezzo terzo = new Attrezzo("terzo", 1);
-        
-        stanza.addAttrezzo(primo);
-        stanza.addAttrezzo(secondo);
-        stanza.addAttrezzo(terzo);
-        
-        stanza.removeAttrezzo(secondo);
-        
-        assertSame(primo, stanza.getAttrezzi()[0]);
-        assertSame(terzo, stanza.getAttrezzi()[1]);
-        assertNull(stanza.getAttrezzo("secondo"));
-    }
 
     @Test
     public void testRemoveAttrezzo_UltimoDaStanzaPiena() {

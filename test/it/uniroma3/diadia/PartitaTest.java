@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import it.uniroma3.diadia.ambienti.Stanza;
 import it.uniroma3.diadia.giocatore.Giocatore;
+import it.uniroma3.diadia.attrezzi.Attrezzo;
 
 /**
  * Questa classe testa tutti i metodi della classe Partita
@@ -19,11 +20,13 @@ class PartitaTest {
 	private Partita partita;
 	private Stanza stanza;
 	private Stanza stanzaVincente;
+	private Attrezzo chiaveSblocco;
 
 	@BeforeEach
 	public void setUp() {
 		partita = new Partita();
 		stanza = new Stanza("Stanza");
+		chiaveSblocco = new Attrezzo("chiave", 1);
 		
 		// Otteniamo la stanza vincente spostandoci temporaneamente in essa
 		partita.setStanzaCorrente(partita.getStanzaCorrente().getStanzaAdiacente("nord")); // Biblioteca è a nord dell'Atrio
@@ -36,36 +39,15 @@ class PartitaTest {
 	/* TEST per vinta */
 	
 	@Test
-	public void testVinta_PassaggioPartitaVinta() {
-		partita.setStanzaCorrente(stanza);
-		assertFalse(partita.vinta());
-		partita.setStanzaCorrente(stanzaVincente);
-		assertTrue(partita.vinta());
-	}
-	
-	
-	@Test
 	public void testVinta_InizialmenteFalse() {
 		assertFalse(partita.vinta());
 	}
-
+	
 	@Test
-	public void testVinta_DopoAverImpostatoStanzaVincente() {
-		partita.setStanzaCorrente(stanzaVincente);
-		assertTrue(partita.vinta());
-	}
-
-
-	@Test
-	public void testVinta_Selettore() {
-		partita.setStanzaCorrente(stanza);
+	public void testVinta_DopoAverImpostatoStanzaVincenteBloccata() {
+		partita.getStanzaCorrente().removeAttrezzo(chiaveSblocco);
+		partita.setStanzaCorrente(partita.getStanzaCorrente().getStanzaAdiacente("nord"));
 		assertFalse(partita.vinta());
-		partita.setStanzaCorrente(stanzaVincente);
-		assertTrue(partita.vinta());
-		partita.setStanzaCorrente(stanza);
-		assertFalse(partita.vinta());
-		partita.setStanzaCorrente(stanzaVincente);
-		assertTrue(partita.vinta());
 	}
 
 	/* TEST per isFinita */
@@ -77,12 +59,6 @@ class PartitaTest {
 	@Test
 	public void testIsFinita_DopoImpostatoFinita() {
 		partita.setFinita();
-		assertTrue(partita.isFinita());
-	}
-
-	@Test
-	public void testIsFinita_QuandoVinta() {
-		partita.setStanzaCorrente(stanzaVincente);
 		assertTrue(partita.isFinita());
 	}
 

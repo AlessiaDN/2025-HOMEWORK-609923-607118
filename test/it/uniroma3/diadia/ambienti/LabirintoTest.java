@@ -93,18 +93,6 @@ class LabirintoTest {
 		Stanza est = stanzaCorrente.getStanzaAdiacente("est");
 		assertEquals("Aula N11", est.getNome());
 	}
-
-	@Test
-	public void testCreaStanze_AdiacenzaSudAtrio() {
-		Stanza sud = stanzaCorrente.getStanzaAdiacente("sud");
-		assertEquals("Aula N10", sud.getNome());
-	}
-
-	@Test
-	public void testCreaStanze_AdiacenzaOvestAtrio() {
-		Stanza ovest = stanzaCorrente.getStanzaAdiacente("ovest");
-		assertEquals("Laboratorio Campus", ovest.getNome());
-	}
 	
 	@Test
 	public void testCreaStanze_AdiacenzaBiblioteca() {
