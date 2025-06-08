@@ -5,22 +5,11 @@ import it.uniroma3.diadia.IO;
 
 /* Classe che gestisce il comando fine */
 
-public class ComandoFine implements Comando {
-	private IO io;
-	
-	@Override 
-	public void setParametro (String parametro) {
-		
-	}
+public class ComandoFine extends AbstractComando {
 	
 	@Override
 	public String getNome() {
 		return "fine";
-	}
-	
-	@Override
-	public String getParametro() {
-		return null;
 	}
 	
 	@Override

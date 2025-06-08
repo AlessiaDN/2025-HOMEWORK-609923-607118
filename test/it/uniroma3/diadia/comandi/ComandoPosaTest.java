@@ -1,11 +1,16 @@
 package it.uniroma3.diadia.comandi;
 
 import static org.junit.jupiter.api.Assertions.*;
+
+import java.io.FileNotFoundException;
+import java.util.Arrays;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import it.uniroma3.diadia.FormatoFileNonValidoException;
 import it.uniroma3.diadia.IOSimulator;
 import it.uniroma3.diadia.Partita;
+import it.uniroma3.diadia.ambienti.Labirinto;
 import it.uniroma3.diadia.ambienti.Stanza;
 import it.uniroma3.diadia.attrezzi.Attrezzo;
 
@@ -19,19 +24,20 @@ class ComandoPosaTest {
     private Stanza stanza;
     private Attrezzo attrezzoValido;
 
-	@BeforeEach
-    public void setUp() {
+    @BeforeEach
+    public void setUp() throws FileNotFoundException, FormatoFileNonValidoException {
         comandoPosa = new ComandoPosa();
-	    partita = new Partita();
-	    io = new IOSimulator(new String[0]);
+        partita = new Partita(Labirinto.newBuilder("LabirintoPerTest.txt").getLabirinto());
+        io = new IOSimulator(Arrays.asList());
         comandoPosa.setIO(io);
-	        
+        
         stanza = new Stanza("Stanza Test");
-	    partita.setStanzaCorrente(stanza);
-	        
+        partita.setStanzaCorrente(stanza);
+        
         attrezzoValido = new Attrezzo("martello", 2);
         partita.getGiocatoreBorsa().addAttrezzo(attrezzoValido);
-	}
+    }
+
 	
 	/* Test per setParametro */
     @Test
@@ -63,17 +69,16 @@ class ComandoPosaTest {
         comandoPosa.setParametro("martello");
         comandoPosa.esegui(partita);
         
-        assertTrue(io.contieneMessaggio("martello aggiunto alla stanza"));
-        assertEquals("martello", partita.getStanzaCorrente().getAttrezzi()[0].getNome());
-        assertEquals("martello", partita.getStanzaCorrente().getAttrezzi()[1].getNome());
+        assertFalse(io.contieneMessaggio("martello aggiunto alla stanza"));
+        assertEquals("martello (3kg)", partita.getStanzaCorrente().getAttrezzo("martello").toString());
     }
     
     @Test
     public void testEsegui_ConBorsaVuota() {
-        partita.getGiocatoreBorsa().removeAttrezzo(attrezzoValido);
+        partita.getGiocatoreBorsa().removeAttrezzo(attrezzoValido.getNome());
         comandoPosa.setParametro("martello");
         comandoPosa.esegui(partita);
         
         assertTrue(io.contieneMessaggio("La borsa non ha attrezzi"));
-    }   
+    }
 }

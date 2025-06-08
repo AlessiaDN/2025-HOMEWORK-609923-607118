@@ -1,63 +1,53 @@
 package it.uniroma3.diadia;
 
 
+import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
+
+
+
 /* Classe per creare un simulatore di console */
 
 
 public class IOSimulator implements IO{
-	private String[] input;
+	private List<String> input;
 	private int indiceInput;
 
-	private String[] output;
+	private Map<Integer, String> output;
 	private int indiceOutput;
 	
-	public IOSimulator(String[] inputUtente) {
+	public IOSimulator(List<String> inputUtente) {
 		this.input = inputUtente;
 		this.indiceInput = 0;
-		this.output = new String[10];
+		this.output = new HashMap<Integer, String>();
 		this.indiceOutput = 0;
 	}
 	
 	@Override
 	public String leggiRiga() {
-	    if (indiceInput >= input.length) {
-	        return "fine"; //Forza il comando di terminazione se la stringa comandi non lo passa in input
+	    if (indiceInput >= input.size()) {
+	        return "fine"; 
 	    }
-	    return this.input[indiceInput++];
+	    return this.input.get(indiceInput++);
 	}
 	
 	@Override
 	public void mostraMessaggio(String msg) {
-		if(indiceOutput>=output.length) {
-			espandiArrayOutput();
-		}
-		this.output[indiceOutput++] = msg;
+		this.output.put(indiceOutput++, msg);
 	}
 	
-	private void espandiArrayOutput() {
-        String[] nuovoOutput = new String[output.length * 2];
-        //raddoppia la dimensione dell'array se pieno
-        for (int i = 0; i < output.length; i++) {
-            nuovoOutput[i] = output[i];
-        }
-        output = nuovoOutput;
-    }
-	
 	public boolean contieneMessaggio(String messaggio) {
-        this.output = getOutput();
 		
-		for(String s : this.output) {
-            if(s.contains(messaggio)) return true;
+		for(String msg : this.output.values()) {
+            if(msg.contains(messaggio)) {
+            	return true;
+            }
         }
         return false;
     }
 	
-	public String[] getOutput() {
-		String[] output = new String[indiceOutput];
-		
-		for(int i=0; i<indiceOutput; i++) {
-			output[i] = this.output[i];
-		}
-		return output;
+	public String contieneMessaggioAtIndice(Integer indice) {
+		return this.output.get(indice);
 	}
 }

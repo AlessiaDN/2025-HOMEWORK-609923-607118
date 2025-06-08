@@ -87,7 +87,7 @@ class GiocatoreTest {
 	public void testGetBorsa_RimuoviAttrezzo() {
 		Attrezzo attrezzo = new Attrezzo("osso", 1);
 		giocatore.getBorsa().addAttrezzo(attrezzo);
-		giocatore.getBorsa().removeAttrezzo(attrezzo);
+		giocatore.getBorsa().removeAttrezzo(attrezzo.getNome());
 		assertFalse(giocatore.getBorsa().hasAttrezzo("osso"));
 	}
 }

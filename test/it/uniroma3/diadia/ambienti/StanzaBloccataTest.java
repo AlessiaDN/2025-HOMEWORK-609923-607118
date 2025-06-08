@@ -1,9 +1,9 @@
 package it.uniroma3.diadia.ambienti;
 
 import static org.junit.jupiter.api.Assertions.*;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import it.uniroma3.diadia.attrezzi.Attrezzo;
 
 class StanzaBloccataTest {
@@ -13,12 +13,12 @@ class StanzaBloccataTest {
 	private Attrezzo attrSbloccante;
 	
 	@BeforeEach
-	public void setUp() {
-		stanzaBloccata = new StanzaBloccata("StanzaBloccata", "nord", "chiave");
-		stanzaAdiacente = new Stanza("StanzaAdiacente");
-		stanzaBloccata.impostaStanzaAdiacente("nord", stanzaAdiacente);
-		attrSbloccante = new Attrezzo("chiave", 1);;
-	}
+    public void setUp() {
+        stanzaBloccata = new StanzaBloccata("StanzaBloccata", Direzione.nord, "chiave");
+        stanzaAdiacente = new Stanza("StanzaAdiacente");
+        stanzaBloccata.impostaStanzaAdiacente(Direzione.nord, stanzaAdiacente);
+        attrSbloccante = new Attrezzo("chiave", 1);
+    }
 	
 	/* Test per getDescrizione */
 	
@@ -40,37 +40,29 @@ class StanzaBloccataTest {
 	/* Test per getStanzaAdiacente */
 	
 	@Test
-	public void testGetStanzaAdiacenteDirBloccataConAttrezzo() {
-		stanzaBloccata.addAttrezzo(attrSbloccante);
-		Stanza result = stanzaBloccata.getStanzaAdiacente("nord");
-		assertEquals(stanzaAdiacente, result);
-	}
-	
-	@Test
-	public void testStanzaAdiacenteDirBloccataSenzaAttrezzo() {
-		Stanza result = stanzaBloccata.getStanzaAdiacente("nord");
-		assertEquals(stanzaBloccata, result);
-	}
-	
-	@Test
-	public void testGetStanzaAdiacenteDirezioneDiversa() {
-		stanzaBloccata.impostaStanzaAdiacente("est", stanzaAdiacente);
-		Stanza result = stanzaBloccata.getStanzaAdiacente("est");
-		assertEquals(stanzaAdiacente, result);
-	}
-	
-	@Test
-	public void testGetStanzaAdiacenteAttrezzoSbagliato() {
-		 stanzaBloccata.addAttrezzo(new Attrezzo("pala", 1));
-	     Stanza result = stanzaBloccata.getStanzaAdiacente("nord");
-	     assertEquals(stanzaBloccata, result);
-	}
-	
-	@Test
-	 public void testGetStanzaAdiacenteDirezioneNonBloccataNull() {
-        Stanza risultato = stanzaBloccata.getStanzaAdiacente("sud");
-        assertNull(risultato);
+    public void testGetStanzaAdiacente_ConDirezioneDiversa() {
+        stanzaBloccata.impostaStanzaAdiacente(Direzione.est, stanzaAdiacente);
+        Stanza risultato = stanzaBloccata.getStanzaAdiacente(Direzione.est);
+        assertEquals(stanzaAdiacente, risultato);
     }
 	
+	@Test
+	public void testGetStanzaAdiacente_DirezioneBloccataSenzaAttrezzo() {
+	    Stanza risultato = stanzaBloccata.getStanzaAdiacente(Direzione.nord);
+	    assertEquals(stanzaBloccata, risultato);
+	}
+	
+	@Test
+	   public void testGetStanzaAdiacente_ConAttrezzoSbagliato() {
+	       stanzaBloccata.addAttrezzo(new Attrezzo("pala", 1));
+	       Stanza risultato = stanzaBloccata.getStanzaAdiacente(Direzione.nord);
+	       assertEquals(stanzaBloccata, risultato);
+	   }
+	 
+	@Test
+    public void testGetStanzaAdiacente_DirezioneNonBloccataNull() {
+        Stanza risultato = stanzaBloccata.getStanzaAdiacente(Direzione.sud);
+        assertNull(risultato); // Non c'è stanza adiacente a sud
+    }
 	
 }

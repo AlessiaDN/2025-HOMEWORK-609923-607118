@@ -1,11 +1,16 @@
 package it.uniroma3.diadia.comandi;
 
 import static org.junit.jupiter.api.Assertions.*;
+
+import java.io.FileNotFoundException;
+import java.util.Arrays;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import it.uniroma3.diadia.FormatoFileNonValidoException;
 import it.uniroma3.diadia.IOSimulator;
 import it.uniroma3.diadia.Partita;
+import it.uniroma3.diadia.ambienti.Labirinto;
 
 /* Questa classe testa tutti i metodi della classe ComandoNonValido */
 
@@ -16,18 +21,18 @@ class ComandoNonValidoTest {
     private IOSimulator io;
 
     @BeforeEach
-    public void setUp() {
+    public void setUp() throws FileNotFoundException, FormatoFileNonValidoException {
         comandoNonValido = new ComandoNonValido();
-        partita = new Partita();
-        io = new IOSimulator(new String[0]);
+        partita = new Partita(Labirinto.newBuilder("LabirintoPerTest.txt").getLabirinto());
+        io = new IOSimulator(Arrays.asList());
         comandoNonValido.setIO(io);
     }
     
     /* Test per setParametro */
     @Test
-    public void testSetParametro_NonHaEffetti() {
+    public void testSetParametro_Uguale() {
         comandoNonValido.setParametro("qualunque");
-        assertNull(comandoNonValido.getParametro());
+        assertEquals("qualunque", comandoNonValido.getParametro());
     }
     
     /* Test per get */
@@ -43,21 +48,29 @@ class ComandoNonValidoTest {
     
     /* Test per esegui */
     @Test
-    public void testEseguiMostraMessaggioErrore() {
+    public void testEsegui_MostraMessaggioErrore() {
         comandoNonValido.esegui(partita);
         
-        assertEquals(1, io.getOutput().length);
         assertTrue(io.contieneMessaggio("Hai inserito un comando non valido"));
     }
     
     @Test
-    public void testEseguiMultipliMostranoMultipliMessaggi() {
+    public void testEsegui_MultipliMostranoMultipliMessaggi() {
         comandoNonValido.esegui(partita);
         comandoNonValido.esegui(partita);
-        String[] output = io.getOutput();
         
-        assertEquals(2, output.length);
-        assertEquals("Hai inserito un comando non valido", output[0]);
-        assertEquals("Hai inserito un comando non valido", output[1]);
+        assertEquals("Hai inserito un comando non valido", io.contieneMessaggioAtIndice(0));
+        assertEquals("Hai inserito un comando non valido", io.contieneMessaggioAtIndice(1));
+    }
+    
+    @Test
+    public void testEsegui_NonModificaPartita() {
+        boolean statoIniziale = partita.isFinita();
+        int cfuIniziali = partita.getGiocatore().getCfu();
+        
+        comandoNonValido.esegui(partita);
+        
+        assertEquals(statoIniziale, partita.isFinita());
+        assertEquals(cfuIniziali, partita.getGiocatore().getCfu());
     }
 }

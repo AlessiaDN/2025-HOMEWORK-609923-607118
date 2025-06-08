@@ -5,7 +5,7 @@ import it.uniroma3.diadia.attrezzi.Attrezzo;
 /* Estensione della classe Stanza che permette di creare una stanza magica */
 /* ogni volta che posiamo un attrezzo in questa stanza, quest'ultima ne inverte il nome e ne raddoppia il peso */
 
-class StanzaMagica extends Stanza {
+public class StanzaMagica extends Stanza {
 	final static private int SOGLIA_MAGICA_DEFAULT = 3;
 	private int contatoreAttrezziPosati;
 	private int sogliaMagica;

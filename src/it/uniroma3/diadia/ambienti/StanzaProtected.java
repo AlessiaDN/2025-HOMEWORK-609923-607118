@@ -22,8 +22,8 @@ public class StanzaProtected {
         this.numeroStanzeAdiacenti = 0;
         this.numeroAttrezzi = 0;
         this.direzioni = new String[NUMERO_MASSIMO_DIREZIONI];
-        this.stanzeAdiacenti = new StanzaProtected[NUMERO_MASSIMO_DIREZIONI];
         this.attrezzi = new Attrezzo[NUMERO_MASSIMO_ATTREZZI];
+        this.stanzeAdiacenti = new StanzaProtected[NUMERO_MASSIMO_DIREZIONI];
     }
 	
 	 public void impostaStanzaAdiacente(String direzione, StanzaProtected stanza) {

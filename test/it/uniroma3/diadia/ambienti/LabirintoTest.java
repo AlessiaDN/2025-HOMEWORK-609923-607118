@@ -1,9 +1,14 @@
 package it.uniroma3.diadia.ambienti;
 
 import static org.junit.jupiter.api.Assertions.*;
+
+import java.io.FileNotFoundException;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import it.uniroma3.diadia.FormatoFileNonValidoException;
+import it.uniroma3.diadia.ambienti.Labirinto.LabirintoBuilder;
 import it.uniroma3.diadia.attrezzi.Attrezzo;
 
 /**
@@ -19,8 +24,8 @@ class LabirintoTest {
 	private Stanza stanzaCorrente;
 	
 	@BeforeEach
-	public void setUp() {
-		labirinto = new Labirinto();
+	public void setUp() throws FileNotFoundException, FormatoFileNonValidoException {
+		labirinto = Labirinto.newBuilder("LabirintoPerTest.txt").getLabirinto();
 		stanzaCorrente = labirinto.getStanzaCorrente(); // Attualmente l'atrio
 	}
 
@@ -64,40 +69,36 @@ class LabirintoTest {
 	}
 
 	/* TEST per creaStanze */
-	
-	@Test
-	public void testCreaStanze_DirezioneNonDefinita() {
-		assertNull(stanzaCorrente.getStanzaAdiacente("sud-est"));
-	}
 
 	@Test
 	public void testCreaStanze_CoerenzaLabirinto() {
-		Stanza aulaN11 = stanzaCorrente.getStanzaAdiacente("est");
+		Stanza aulaN11 = stanzaCorrente.getStanzaAdiacente(Direzione.est);
 		assertNotNull(aulaN11);
-		Stanza versoAtrio = aulaN11.getStanzaAdiacente("ovest");
+		Stanza versoAtrio = aulaN11.getStanzaAdiacente(Direzione.ovest);
 		assertNotNull(versoAtrio);
 		assertEquals("Atrio", versoAtrio.getNome());
 	}
+
 	
 	@Test
 	public void testCreaStanze_AdiacenzeAtrio() {
-		assertNotNull(stanzaCorrente.getStanzaAdiacente("nord"));
-		assertNotNull(stanzaCorrente.getStanzaAdiacente("est"));
-		assertNotNull(stanzaCorrente.getStanzaAdiacente("sud"));
-		assertNotNull(stanzaCorrente.getStanzaAdiacente("ovest"));
+		assertNotNull(stanzaCorrente.getStanzaAdiacente(Direzione.nord));
+		assertNotNull(stanzaCorrente.getStanzaAdiacente(Direzione.est));
+		assertNotNull(stanzaCorrente.getStanzaAdiacente(Direzione.sud));
+		assertNotNull(stanzaCorrente.getStanzaAdiacente(Direzione.ovest));
 	}
 
 
 	@Test
 	public void testCreaStanze_AdiacenzaEstAtrio() {
-		Stanza est = stanzaCorrente.getStanzaAdiacente("est");
-		assertEquals("Aula N11", est.getNome());
+		Stanza est = stanzaCorrente.getStanzaAdiacente(Direzione.est);
+		assertEquals("AulaN11", est.getNome());
 	}
 	
 	@Test
 	public void testCreaStanze_AdiacenzaBiblioteca() {
 		Stanza biblioteca = labirinto.getStanzaVincente();
-		Stanza sud = biblioteca.getStanzaAdiacente("sud");
+		Stanza sud = biblioteca.getStanzaAdiacente(Direzione.sud);
 		assertNotNull(sud);
 		assertEquals("Atrio", sud.getNome());
 	}
@@ -110,9 +111,35 @@ class LabirintoTest {
 	
 	@Test
 	public void testCreaStanze_AttrezzoInAulaN10() {
-		Stanza aulaN10 = stanzaCorrente.getStanzaAdiacente("sud");
+		Stanza aulaN10 = stanzaCorrente.getStanzaAdiacente(Direzione.sud);
 		Attrezzo lanterna = aulaN10.getAttrezzo("lanterna");
 		assertNotNull(lanterna);
 	}
 	
+	/* Test per LabirintoNuilder */
+	@Test
+	public void testLabirintoBuilder_CreaLabirintoSemplice() throws FileNotFoundException, FormatoFileNonValidoException {
+		Labirinto.LabirintoBuilder builder = Labirinto.newBuilder("LabirintoPerTest.txt");
+		Labirinto l = builder.getLabirinto();
+		assertNotNull(l.getStanzaCorrente());
+		assertNotNull(l.getStanzaVincente());
+	}
+	
+	@Test
+	public void testLabirintoBuilder_AttrezzoInStanza() throws FileNotFoundException, FormatoFileNonValidoException {
+		Labirinto lab = Labirinto.newBuilder("LabirintoPerTest.txt")
+				.addStanzaIniziale("StanzaStart")
+				.addAttrezzo("chiave", 1)
+				.getLabirinto();
+		assertNotNull(lab.getStanzaCorrente().getAttrezzo("chiave"));
+	}
+	
+	@Test
+	public void testLabirintoBuilder_AggiuntaStanze() throws FileNotFoundException, FormatoFileNonValidoException {
+		Labirinto lab = Labirinto.newBuilder("LabirintoPerTest.txt")
+				.addStanza("Stanza1")
+				.addStanza("Stanza2")
+				.getLabirinto();
+		assertNotNull(lab);
+	}
 }

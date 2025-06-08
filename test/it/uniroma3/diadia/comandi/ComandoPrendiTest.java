@@ -1,11 +1,16 @@
 package it.uniroma3.diadia.comandi;
 
 import static org.junit.jupiter.api.Assertions.*;
+
+import java.io.FileNotFoundException;
+import java.util.Arrays;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import it.uniroma3.diadia.FormatoFileNonValidoException;
 import it.uniroma3.diadia.IOSimulator;
 import it.uniroma3.diadia.Partita;
+import it.uniroma3.diadia.ambienti.Labirinto;
 import it.uniroma3.diadia.ambienti.Stanza;
 import it.uniroma3.diadia.attrezzi.Attrezzo;
 import it.uniroma3.diadia.giocatore.Borsa;
@@ -21,18 +26,18 @@ class ComandoPrendiTest {
 	 private Attrezzo attrezzoTest;
 
 	 @BeforeEach
-	 public void setUp() {
-		 comandoPrendi = new ComandoPrendi();
-		 partita = new Partita();
-		 io = new IOSimulator(new String[0]);
-		 comandoPrendi.setIO(io);
-		 
-		 stanza = new Stanza("Stanza Test");
-		 partita.setStanzaCorrente(stanza);
-		 												
-		 attrezzoTest = new Attrezzo("osso", 1);
-		 stanza.addAttrezzo(attrezzoTest);
-	 }
+	    public void setUp() throws FileNotFoundException, FormatoFileNonValidoException {
+	        comandoPrendi = new ComandoPrendi();
+	        partita = new Partita(Labirinto.newBuilder("LabirintoPerTest.txt").getLabirinto());
+	        io = new IOSimulator(Arrays.asList());
+	        comandoPrendi.setIO(io);
+	        
+	        stanza = new Stanza("Stanza Test");
+	        partita.setStanzaCorrente(stanza);
+	        
+	        attrezzoTest = new Attrezzo("osso", 1);
+	        stanza.addAttrezzo(attrezzoTest);
+	    }
 	 
 	 /* Test per setParametro */
 	 @Test
@@ -55,12 +60,13 @@ class ComandoPrendiTest {
 	 
 	 /* Test per esegui */
 	 @Test
-	 public void testEsegui_AttrezzoNonPresente() {
-		 comandoPrendi.setParametro("lanterna");
-		 comandoPrendi.esegui(partita);
-		 
-		 assertTrue(io.contieneMessaggio("Attrezzo non trovato"));
-	 }
+	    public void testEsegui_ConStanzaVuota() {
+	        stanza.removeAttrezzo(attrezzoTest);
+	        comandoPrendi.setParametro("osso");
+	        comandoPrendi.esegui(partita);
+	        
+	        assertTrue(io.contieneMessaggio("La stanza non ha attrezzi"));
+	    }
 	 
 	 @Test
 	 public void testEsegui_AttrezzoPresente() {

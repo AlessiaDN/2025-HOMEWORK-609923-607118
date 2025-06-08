@@ -1,6 +1,8 @@
 package it.uniroma3.diadia.comandi;
 
 import static org.junit.jupiter.api.Assertions.*;
+
+import java.util.Arrays;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -15,7 +17,7 @@ class FabbricaDiComandiFisarmonicaTest {
 
     @BeforeEach
     public void setUp() {
-        io = new IOSimulator(new String[0]);
+        io = new IOSimulator(Arrays.asList());
         fabbrica = new FabbricaDiComandiFisarmonica(io);
     }
     
@@ -40,6 +42,26 @@ class FabbricaDiComandiFisarmonicaTest {
         assertEquals("vai", comando.getNome());
         assertEquals("nord", comando.getParametro());
     }
+    
+    @Test
+    public void testCostruisciComando_Guarda() {
+        Comando comando = fabbrica.costruisciComando("guarda");
+        assertEquals("guarda", comando.getNome());
+        assertNull(comando.getParametro());
+    }
+    
+    @Test
+    public void testCostruisciComando_Aiuto() {
+        Comando comando = fabbrica.costruisciComando("aiuto");
+        assertEquals("aiuto", comando.getNome());
+        assertNull(comando.getParametro());
+    }
 
+    @Test
+    public void testCostruisciComando_Fine() {
+        Comando comando = fabbrica.costruisciComando("fine");
+        assertEquals("fine", comando.getNome());
+        assertNull(comando.getParametro());
+    }
     
 }

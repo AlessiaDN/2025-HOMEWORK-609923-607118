@@ -18,9 +18,9 @@ public class Partita {
 	private Labirinto labirinto;
 	private boolean finita;
 	
-	public Partita(){
+	public Partita(Labirinto l){
 		this.giocatore = new Giocatore();
-		this.labirinto = new Labirinto();
+		this.labirinto = l;
 		this.finita = false;
 	}
 	
@@ -82,6 +82,10 @@ public class Partita {
 	 */
 	public Stanza getStanzaCorrente() {
 		return this.labirinto.getStanzaCorrente();
+	}
+	
+	public Labirinto getLabirinto() {
+		return this.labirinto;
 	}
 	
 }

@@ -1,6 +1,13 @@
 package it.uniroma3.diadia.giocatore;
 
 import static org.junit.jupiter.api.Assertions.*;
+
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -33,16 +40,17 @@ class BorsaTest {
 	public void testToString_ConUnAttrezzo() {
 		borsa.addAttrezzo(osso);
 		String descrizione = borsa.toString();
-		assertTrue(descrizione.contains("Contenuto borsa (1kg/10kg): osso (1kg)"));
+		assertTrue(descrizione.contains("Contenuto borsa (1kg/10kg): [osso (1kg)]"));
 	}
 
 	@Test
-	public void testToString_ConDueAttrezzi() {
+	public void testToString_ConDueAttrezziUguali() {
 		borsa.addAttrezzo(osso);
 		borsa.addAttrezzo(osso);
 		String descrizione = borsa.toString();
-		assertTrue(descrizione.contains("Contenuto borsa (2kg/10kg): osso (1kg) osso (1kg)"));
+		assertTrue(descrizione.contains("Contenuto borsa (1kg/10kg): [osso (1kg)]"));
 	}
+
 
     /* TEST per addAttrezzo */
     @Test
@@ -106,7 +114,7 @@ class BorsaTest {
     public void testGetPeso_DiminuisceDopoRimozioneAttrezzo() {
         borsa.addAttrezzo(osso);
         assertEquals(1, borsa.getPeso());
-        borsa.removeAttrezzo(osso);
+        borsa.removeAttrezzo(osso.getNome());
         assertEquals(0, borsa.getPeso());
     }
     
@@ -125,7 +133,7 @@ class BorsaTest {
     @Test
     public void testIsEmpty_DopoRimozioneAttrezzo() {
         borsa.addAttrezzo(osso);
-        borsa.removeAttrezzo(osso);
+        borsa.removeAttrezzo(osso.getNome());
         assertTrue(borsa.isEmpty());
     }
     
@@ -150,30 +158,23 @@ class BorsaTest {
     @Test
     public void testRemoveAttrezzo_RimossoNonPiùPresente() {
         borsa.addAttrezzo(osso);
-        Attrezzo rimosso = borsa.removeAttrezzo(osso);
+        Attrezzo rimosso = borsa.removeAttrezzo(osso.getNome());
         
         assertSame(osso, rimosso);
         assertNull(borsa.getAttrezzo("osso"));
     }
 
+
     @Test
     public void testRemoveAttrezzo_AggiornaPesoBorsa() {
         borsa.addAttrezzo(osso);
         int pesoIniziale = borsa.getPeso();
-        borsa.removeAttrezzo(osso);
+        borsa.removeAttrezzo(osso.getNome());
         assertEquals(pesoIniziale - osso.getPeso(), borsa.getPeso());
     }
 
     @Test
     public void testRemoveAttrezzo_DaBorsaVuota() {
-        assertNull(borsa.removeAttrezzo(osso));
-    }
-
-    @Test
-    public void testRemoveAttrezzo_ConRiferimentoDiversoMaStessoNome() {
-        Attrezzo osso1 = new Attrezzo("osso", 1);
-        Attrezzo osso2 = new Attrezzo("osso", 1);
-        borsa.addAttrezzo(osso1);
-        assertNull(borsa.removeAttrezzo(osso2));
+        assertNull(borsa.removeAttrezzo(osso.getNome()));
     }
 }

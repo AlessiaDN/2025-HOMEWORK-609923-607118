@@ -1,30 +1,13 @@
 package it.uniroma3.diadia.comandi;
 
-import it.uniroma3.diadia.IO;
 import it.uniroma3.diadia.Partita;
 import it.uniroma3.diadia.attrezzi.Attrezzo;
 
 /* Classe che gestisce il comando prendi */
 
-public class ComandoPrendi implements Comando {
+public class ComandoPrendi extends AbstractComando {
 	
 	private String nomeAttrezzo;
-	private IO io;
-	
-	@Override
-	public void setIO(IO io) {
-		this.io = io;
-	}
-	
-	@Override
-	public void setParametro (String parametro) {
-		this.nomeAttrezzo = parametro;
-	}
-	
-	@Override
-	public String getParametro() {
-		return this.nomeAttrezzo;
-	}
 	
 	@Override
 	public String getNome() {
@@ -33,7 +16,8 @@ public class ComandoPrendi implements Comando {
 	
 	@Override
 	public void esegui (Partita partita) {
-
+		nomeAttrezzo = getParametro();
+		
 		if(nomeAttrezzo==null) {
 			io.mostraMessaggio("Nessun attrezzo inserito");
 		}
@@ -44,7 +28,7 @@ public class ComandoPrendi implements Comando {
 			else {
 				Attrezzo attrezzo = partita.getStanzaCorrente().getAttrezzo(nomeAttrezzo);
 				if(attrezzo==null) {
-					io.mostraMessaggio("Attrezzo non trovato");
+					io.mostraMessaggio("L'attrezzo non è stato trovato");
 				}
 				else {
 					if(partita.getGiocatoreBorsa().addAttrezzo(attrezzo)) {
@@ -52,7 +36,7 @@ public class ComandoPrendi implements Comando {
 						io.mostraMessaggio(nomeAttrezzo+" aggiunto all'inventario\n"+partita.getGiocatoreBorsa());
 					}
 					else {
-						io.mostraMessaggio("Non posso aggiungere l'attrezzo perché non c'è abbastanza spazio nella borsa");	
+						io.mostraMessaggio("Non c'è abbastanza spazio nella borsa, non posso aggiungere l'attrezzo");	
 					}
 				}
 			}

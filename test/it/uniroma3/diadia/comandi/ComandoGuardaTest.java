@@ -1,14 +1,19 @@
 package it.uniroma3.diadia.comandi;
 
 import static org.junit.jupiter.api.Assertions.*;
+
+import java.io.FileNotFoundException;
+import java.util.Arrays;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import it.uniroma3.diadia.IOSimulator;
 import it.uniroma3.diadia.Partita;
+import it.uniroma3.diadia.ambienti.Labirinto;
 import it.uniroma3.diadia.ambienti.Stanza;
 import it.uniroma3.diadia.attrezzi.Attrezzo;
 import it.uniroma3.diadia.giocatore.Borsa;
+import it.uniroma3.diadia.FormatoFileNonValidoException;
+import it.uniroma3.diadia.IOSimulator;
 
 class ComandoGuardaTest {
 
@@ -17,18 +22,18 @@ class ComandoGuardaTest {
     private IOSimulator io;
 
     @BeforeEach
-    public void setUp() {
+    public void setUp() throws FileNotFoundException, FormatoFileNonValidoException {
         comandoGuarda = new ComandoGuarda();
-        partita = new Partita();
-        io = new IOSimulator(new String[0]);
+        partita = new Partita(Labirinto.newBuilder("LabirintoPerTest.txt").getLabirinto());
+        io = new IOSimulator(Arrays.asList());
         comandoGuarda.setIO(io);
     }
     
     /* Test per setParametro */
     @Test
-    public void testSetParametro_NonHaEffetti() {
+    public void testSetParametro_Uguale() {
         comandoGuarda.setParametro("qualunque");
-        assertNull(comandoGuarda.getParametro());
+        assertEquals("qualunque", comandoGuarda.getParametro());
     }
     
     /* Test per get */
